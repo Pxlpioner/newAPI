@@ -4,8 +4,14 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const mongoose = require('mongoose');
+require("./models/orderModel");
+require("./models/userModel");
+require("./models/productModel");
+
+var orderRouter = require("./routes/orderRoutes");
+var userRoutes = require("./routes/userRoutes");
+var productRoutes = require("./routes/productRoutes.js");
 
 var app = express();
 
@@ -19,8 +25,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+mongoose
+  .connect("mongodb+srv://toibietemkhongbiet:jRrrtvyfh7SiJhY@cluster0.zpgih.mongodb.net/asm")
+  .then( ( ) => {console.log(">>> DB CONNECTED!!!!!!!!");})
+  .catch((e) => {console.log(`>>> DB Error: ${e.message}`);});
+
+app.use("/orders", orderRouter);
+app.use("/users", userRoutes);
+app.use("/products", productRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
