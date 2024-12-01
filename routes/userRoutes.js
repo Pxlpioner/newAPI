@@ -22,8 +22,8 @@ router.post("/login", async (req, res) => {
 
 router.post('/register', async (req, res) => {
     try {
-        const {inputName, inputPass} = req.body;
-        const item = {inputName, inputPass};
+        const {_id, inputName, inputPass} = req.body;
+        const item = {_id, inputName, inputPass};
         await userModel.create(item);
         res.status(200).json({"status": true, "data": item})
     } catch (e) { return res.status(400).json({ message: e.message }); }
