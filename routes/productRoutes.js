@@ -1,5 +1,6 @@
 var express = require("express");
 var router = express.Router();
+const mongoose = require('mongoose');
 
 const productModel = require("../models/productModel");
 const JWT = require('jsonwebtoken');
@@ -52,5 +53,33 @@ router.put('/updateByid/', async (req, res) => {
 
     } catch (e) { res.status(400).json({ message: `Something went wrong - ${e.message}` }); }
 });
+
+router.post("/addProduct", async (req, res) => {
+    try {
+        const token = req.header("Authorization").split(' ')[1];
+
+        if (!token) { return res.status(401).json({ "message": 401 }); }
+
+        JWT.verify(token, tokenConfig.SECRETKEY, async (err) => {
+            if (err) { return res.status(403).json({ "message": "403 - Unauthorized", "err": err }); }
+
+            const { name, price } = req.body;
+
+            if (!name || !price) {
+                return res.status(400).json({ message: "Name and price are required fields." });
+            }
+
+            const newProduct = new productModel({
+                    _id: new mongoose.Types.ObjectId(),
+                    productName: name,
+                    productPrice: price
+                });
+            const savedProduct = await newProduct.save();
+
+            res.status(201).json({ message: "Product created successfully", product: savedProduct });
+        });
+    } catch (e) { res.status(400).json({ message: `Something went wrong - ${e.message}` }); }
+});
+
 
 module.exports = router;
