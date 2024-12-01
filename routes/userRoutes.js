@@ -31,7 +31,7 @@ router.post('/register', async (req, res) => {
 
 app.get("/getAll", async (req, res) => {
     try {
-      const users = await User.find();
+      const users = await userModel.find();
       res.status(200).json(users);
     } catch (e) { return res.status(400).json({ message: e.message }); }
 });
