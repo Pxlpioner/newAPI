@@ -29,7 +29,7 @@ router.post('/register', async (req, res) => {
     } catch (e) { return res.status(400).json({ message: e.message }); }
 });
 
-app.get("/getAll", async (req, res) => {
+router.get("/getAll", async (req, res) => {
     try {
       const users = await userModel.find();
       res.status(200).json(users);
