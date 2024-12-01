@@ -9,15 +9,15 @@ router.post("/getAll", async (req, res) => {
     try {
         const token = req.header("Authorization").split(' ')[1];
 
-        if ( !token ) { return res.status(401).json({ "status": 401 }); }
+        if ( !token ) { return res.status(401).json({ "message": 401 }); }
             
         JWT.verify(token, tokenConfig.SECRETKEY, async (err, id) => {
-            if (err) { return res.status(403).json({ "status": `403 - false`, "err": err }); }
+            if (err) { return res.status(403).json({ "message": `403 - false`, "err": err }); }
 
             const mlist = await productModel.find();
             res.status(200).json(mlist); 
         });
-        
+
     } catch (e) { res.status(400).json({ message: `Something went wrong - ${e.message}` }); }
 });
 
