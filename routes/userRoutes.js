@@ -20,4 +20,20 @@ router.post("/login", async (req, res) => {
     } catch (e) { return res.status(400).json({ message: e.message }); }
 });
 
+router.post('/register', async (req, res) => {
+    try {
+        const {inputName, inputPass} = req.body;
+        const item = {inputName, inputPass};
+        await userModel.create(item);
+        res.status(200).json({"status": true, "data": item})
+    } catch (e) { return res.status(400).json({ message: e.message }); }
+});
+
+app.get("/getAll", async (req, res) => {
+    try {
+      const users = await User.find();
+      res.status(200).json(users);
+    } catch (e) { return res.status(400).json({ message: e.message }); }
+});
+
 module.exports = router;
